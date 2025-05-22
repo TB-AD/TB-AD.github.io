@@ -2,13 +2,485 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Single Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TB-Bench</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 1rem; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .author-list {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .affiliations {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .contact-card {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 30px 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .contact-card img {
+      max-width: 200px;
+      max-height: 100px;
+    }
+    .contact-info {
+      flex: 1;
+    }
+    .contact-info h3 {
+      margin-top: 0;
+      color: #0366d6;
+    }
+    .contact-info p {
+      margin: 5px 0;
+    }
+    .links {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .links a {
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #0366d6;
+    }
+    .links a:hover {
+      background-color: #f6f8fa;
+    }
+    .highlight {
+      color: #d73a49;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f6f8fa;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+    }
+    .tasks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .task-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: #f9f9f9;
+    }
+    .task-card h3 {
+      margin-top: 0;
+      color: #0366d6;
+    }
+    .abstract {
+      background-color: #f6f8fa;
+      padding: 15px;
+      border-left: 4px solid #0366d6;
+      margin: 20px 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .task-table {
+      margin: 20px 0;
+    }
+    .results {
+      margin: 20px 0;
+    }
+    sup {
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+      top: -0.5em;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome!</h1>
-  <p>This is my GitHub Pages site.</p>
+  <h1>TB-Bench: Training and Testing Multi-Modal AI for Understanding Spatio-Temporal Traffic Behaviors from Dashcam Images/Videos</h1>
+  
+  <div class="author-list">
+    Korawat Charoenpitaks<sup>1,*</sup>, 
+    Van-Quang Nguyen<sup>2,*</sup>, 
+    Masanori Suganuma<sup>1</sup>, 
+    Kentaro Arai<sup>3</sup>, 
+    Seiji Totsuka<sup>3</sup>, 
+    Hiroshi Ino<sup>3</sup>, 
+    Takayuki Okatani<sup>1,2,*</sup>
+  </div>
+  
+  <div class="affiliations">
+    <sup>1</sup>Tohoku University, 
+    <sup>2</sup>RIKEN AIP, 
+    <sup>3</sup>DENSO CORPORATION<br>
+    <sup>*</sup>Corresponding authors: korawat@vision.is.tohoku.ac.jp, quang.nguyen.jz@riken.jp, okatani@tohoku.ac.jp
+  </div>
+  
+  <div class="links">
+    <a href="https://github.com/TB-AD/TB-Bench">📋 GitHub Repository</a>
+    <a href="https://arxiv.org/abs/2501.05733">📝 arXiv Paper</a>
+    <a href="https://huggingface.co/datasets/DHPR/TB-Bench-box">📊 Benchmark Dataset</a>
+    <a href="https://github.com/TB-AD/TB-Bench#quick-start">🚀 Quick Start</a>
+  </div>
+  
+  <div class="abstract">
+    <p>
+      The application of Multi-modal Large Language Models (MLLMs) in Autonomous Driving (AD) faces significant challenges due to their limited training on traffic-specific data and the absence of dedicated benchmarks for spatiotemporal understanding. This study addresses these issues by proposing TB-Bench, a comprehensive benchmark designed to evaluate MLLMs on understanding traffic behaviors across eight perception tasks from ego-centric views. We also introduce vision-language instruction tuning datasets, TB-100k and TB-250k, along with simple yet effective baselines for the tasks. Through extensive experiments, we show that existing MLLMs underperform in these tasks, with even a powerful model like GPT-4o achieving less than 35% accuracy on average. In contrast, when fine-tuned with TB-100k or TB-250k, our baseline models achieve average accuracy up to 85%, significantly enhancing performance on the tasks. Additionally, we demonstrate performance transfer to another driving benchmark by co-training a model on the other driving benchmark dataset with our proposed dataset.
+    </p>
+  </div>
+  
+  <h2>Overview</h2>
+  <p>
+    TB-Bench provides a comprehensive framework for understanding traffic behaviors using dashcam footage.
+    Our benchmark enables the development and evaluation of multi-modal AI models that can analyze
+    spatial and temporal aspects of traffic scenes, contributing to safer autonomous driving systems.
+  </p>
+  
+  <h2>Key Contributions</h2>
+  <ol>
+    <li>Introduction of TB-Bench, a benchmark for assessing MLLMs on eight perception tasks of traffic behavior understanding</li>
+    <li>Presentation of vision-language instruction tuning datasets (TB-100k and TB-250k) for the tasks, along with a generic baseline</li>
+    <li>Extensive experiments demonstrating the performance gap between existing MLLMs and fine-tuned baselines</li>
+    <li>Demonstration that our proposed dataset can be used as part of co-training datasets to generalize and improve performance on other driving benchmarks</li>
+  </ol>
+  
+  <h2>Benchmark Tasks</h2>
+  <div class="task-table">
+    <table>
+      <tr>
+        <th>Task Type</th>
+        <th>Abstract Concepts</th>
+        <th>Classes</th>
+      </tr>
+      <tr>
+        <td colspan="3"><strong>Spatial Information:</strong></td>
+      </tr>
+      <tr>
+        <td>Relative Distance</td>
+        <td>distance in meters</td>
+        <td>ℝ (numerical)</td>
+      </tr>
+      <tr>
+        <td>Spatial Reasoning</td>
+        <td>back, back left, back right, front, front left, front right</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>Orientation Reasoning</td>
+        <td>opposite, perpendicular, similar, and degrees</td>
+        <td>3/ℝ</td>
+      </tr>
+      <tr>
+        <td colspan="3"><strong>Object Behavior:</strong></td>
+      </tr>
+      <tr>
+        <td>Other Lane to Ego-Vehicle</td>
+        <td>front lane, front left lane, front right lane, oncoming traffic lane</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>Other Lane Changing</td>
+        <td>left lane change, no change, right lane change</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>Other Turning</td>
+        <td>go straight, left turn, right turn</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td colspan="3"><strong>Ego Behavior:</strong></td>
+      </tr>
+      <tr>
+        <td>Ego Turning</td>
+        <td>go straight, left turn, right turn</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>Ego Traverse Distance</td>
+        <td>distance traveled in meters</td>
+        <td>ℝ (numerical)</td>
+      </tr>
+    </table>
+  </div>
+  
+  <h2>Detailed Task Examples</h2>
+  <p>The TB-Bench dataset consists of 8 tasks, each with 250 samples. Below are examples of each task:</p>
+  
+  <style>
+    .tasks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .task-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: #f9f9f9;
+    }
+    .task-card h3 {
+      margin-top: 0;
+      color: #0366d6;
+    }
+    .example {
+      margin-top: 15px;
+    }
+    .task-image {
+      width: 100%;
+      border-radius: 4px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+    }
+    .multi-frame-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .multi-frame-image {
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+  </style>
+  
+  <div class="tasks">
+    <!-- Task 1: Relative Distance -->
+    <div class="task-card">
+      <h3>1. Relative Distance</h3>
+      <p><strong>Format:</strong> Single-frame input</p>
+      <p><strong>Description:</strong> Measures the ability to estimate the distance between the ego vehicle and another entity in meters.</p>
+      <img src="task_examples/RD/image-1d100e9.jpg" alt="Relative Distance Example" class="task-image">
+      <div class="example">
+        <p><strong>Question:</strong> "What is the distance from the ego-vehicle to Entity #1 along the road's surface in meters?"</p>
+        <p><strong>Answer:</strong> "10.57 meters"</p>
+      </div>
+    </div>
+    
+    <!-- Task 2: Spatial Reasoning -->
+    <div class="task-card">
+      <h3>2. Spatial Reasoning</h3>
+      <p><strong>Format:</strong> Single-frame input</p>
+      <p><strong>Description:</strong> Tests the ability to determine the relative spatial position of other vehicles.</p>
+      <img src="task_examples/SR/image-1d100e9.jpg" alt="Spatial Reasoning Example" class="task-image">
+      <div class="example">
+        <p><strong>Question:</strong> "How are Entity #1 and Entity #2 spatially related, from the Entity #2 perspective?"</p>
+        <p><strong>Answer:</strong> "back"</p>
+      </div>
+    </div>
+    
+    <!-- Task 3: Orientation Reasoning -->
+    <div class="task-card">
+      <h3>3. Orientation Reasoning</h3>
+      <p><strong>Format:</strong> Single-frame input</p>
+      <p><strong>Description:</strong> Evaluates the ability to determine the orientation relationship between vehicles.</p>
+      <img src="task_examples/OR/image-1d100e9.jpg" alt="Orientation Reasoning Example" class="task-image">
+      <div class="example">
+        <p><strong>Question:</strong> "What is the angle between Entity #2 and Entity #1, in degrees?"</p>
+        <p><strong>Answer:</strong> "179.91 degrees"</p>
+      </div>
+    </div>
+    
+    <!-- Task 4: Other Lane to Ego -->
+    <div class="task-card">
+      <h3>4. Other Lane to Ego-Vehicle</h3>
+      <p><strong>Format:</strong> Multi-frame input (8 frames)</p>
+      <p><strong>Description:</strong> Tests the ability to identify which lane another vehicle is in relative to the ego vehicle.</p>
+      <div class="multi-frame-container">
+        <img src="task_examples/EGO_LANE/image-1d100e9.jpg" alt="Frame 1" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1d300ea.jpg" alt="Frame 2" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1d500eb.jpg" alt="Frame 3" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1d700ec.jpg" alt="Frame 4" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1d900ed.jpg" alt="Frame 5" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1db00ee.jpg" alt="Frame 6" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1dd00ef.jpg" alt="Frame 7" class="multi-frame-image">
+        <img src="task_examples/EGO_LANE/image-1df00f0.jpg" alt="Frame 8" class="multi-frame-image">
+      </div>
+      <div class="example">
+        <p><strong>Question:</strong> "How would you describe the lane position of Entity #1? Options: front lane, front left lane, front right lane, or oncoming traffic lane."</p>
+        <p><strong>Answer:</strong> "front left lane"</p>
+      </div>
+    </div>
+    
+    <!-- Task 5: Other Lane Changing -->
+    <div class="task-card">
+      <h3>5. Other Lane Changing</h3>
+      <p><strong>Format:</strong> Multi-frame input (8 frames)</p>
+      <p><strong>Description:</strong> Evaluates the ability to recognize if another vehicle is changing lanes.</p>
+      <div class="multi-frame-container">
+        <img src="task_examples/OBJ_LANE/image-1d100e9.jpg" alt="Frame 1" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1d300ea.jpg" alt="Frame 2" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1d500eb.jpg" alt="Frame 3" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1d700ec.jpg" alt="Frame 4" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1d900ed.jpg" alt="Frame 5" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1db00ee.jpg" alt="Frame 6" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1dd00ef.jpg" alt="Frame 7" class="multi-frame-image">
+        <img src="task_examples/OBJ_LANE/image-1df00f0.jpg" alt="Frame 8" class="multi-frame-image">
+      </div>
+      <div class="example">
+        <p><strong>Question:</strong> "How would you describe the driving scene involving Entity #1? Please explain, focusing on the vehicle's lane change maneuver."</p>
+        <p><strong>Answer:</strong> "left lane change"</p>
+      </div>
+    </div>
+    
+    <!-- Task 6: Other Turning -->
+    <div class="task-card">
+      <h3>6. Other Turning</h3>
+      <p><strong>Format:</strong> Multi-frame input (8 frames)</p>
+      <p><strong>Description:</strong> Tests the ability to determine if another vehicle is turning.</p>
+      <div class="multi-frame-container">
+        <img src="task_examples/OBJ_TURN/image-1d100e9.jpg" alt="Frame 1" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1d300ea.jpg" alt="Frame 2" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1d500eb.jpg" alt="Frame 3" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1d700ec.jpg" alt="Frame 4" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1d900ed.jpg" alt="Frame 5" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1db00ee.jpg" alt="Frame 6" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1dd00ef.jpg" alt="Frame 7" class="multi-frame-image">
+        <img src="task_examples/OBJ_TURN/image-1df00f0.jpg" alt="Frame 8" class="multi-frame-image">
+      </div>
+      <div class="example">
+        <p><strong>Question:</strong> "How would you describe the driving scene involving Entity #1? Please explain, focusing on the vehicle's turning maneuver."</p>
+        <p><strong>Answer:</strong> "turning right"</p>
+      </div>
+    </div>
+    
+    <!-- Task 7: Ego Turning -->
+    <div class="task-card">
+      <h3>7. Ego Turning</h3>
+      <p><strong>Format:</strong> Multi-frame input (8 frames)</p>
+      <p><strong>Description:</strong> Evaluates the ability to determine the turning direction of the ego vehicle.</p>
+      <div class="multi-frame-container">
+        <img src="task_examples/EGO_TURN/image-1d100e9.jpg" alt="Frame 1" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1d300ea.jpg" alt="Frame 2" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1d500eb.jpg" alt="Frame 3" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1d700ec.jpg" alt="Frame 4" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1d900ed.jpg" alt="Frame 5" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1db00ee.jpg" alt="Frame 6" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1dd00ef.jpg" alt="Frame 7" class="multi-frame-image">
+        <img src="task_examples/EGO_TURN/image-1df00f0.jpg" alt="Frame 8" class="multi-frame-image">
+      </div>
+      <div class="example">
+        <p><strong>Question:</strong> "How would you describe the driving scene involving our car? Please explain, focusing on our car's turning maneuver."</p>
+        <p><strong>Answer:</strong> "left turn"</p>
+      </div>
+    </div>
+    
+    <!-- Task 8: Ego Traverse Distance -->
+    <div class="task-card">
+      <h3>8. Ego Traverse Distance</h3>
+      <p><strong>Format:</strong> Multi-frame input (8 frames)</p>
+      <p><strong>Description:</strong> Tests the ability to estimate the distance traveled by the ego vehicle in meters.</p>
+      <div class="multi-frame-container">
+        <img src="task_examples/EGO_TRA/image-1d100e9.jpg" alt="Frame 1" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1d300ea.jpg" alt="Frame 2" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1d500eb.jpg" alt="Frame 3" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1d700ec.jpg" alt="Frame 4" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1d900ed.jpg" alt="Frame 5" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1db00ee.jpg" alt="Frame 6" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1dd00ef.jpg" alt="Frame 7" class="multi-frame-image">
+        <img src="task_examples/EGO_TRA/image-1df00f0.jpg" alt="Frame 8" class="multi-frame-image">
+      </div>
+      <div class="example">
+        <p><strong>Question:</strong> "How far has our car driven and what kind of steering maneuver did it perform in the current scene?"</p>
+        <p><strong>Answer:</strong> "12.48 meters"</p>
+      </div>
+    </div>
+  </div>
+  
+  <h2>Examples</h2>
+  <img src="https://raw.githubusercontent.com/TB-AD/TB-Bench/main/images/example_main_image.jpg" alt="TB-Bench Examples">
+  <p class="caption">Examples of tasks from TB-Bench. Each task consists of input image(s) accompanied by a question and a ground-truth answer.</p>
+  
+  <h2>Key Findings</h2>
+  <div class="results">
+    <ul>
+      <li>Zero-shot performance of existing MLLMs (including GPT-4o and Gemini) averages below 35% accuracy across the benchmark tasks</li>
+      <li>Fine-tuning on our TB-100k dataset improves performance to 77.5% average accuracy</li>
+      <li>Fine-tuning on TB-250k further improves performance to 85.1% average accuracy</li>
+      <li>Performance transfers to other driving benchmarks when used in co-training</li>
+    </ul>
+  </div>
+  
+  <h2>Resources</h2>
+  <table>
+    <tr>
+      <th>Type</th>
+      <th>Link</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Paper</td>
+      <td><a href="https://arxiv.org/abs/2501.05733">arXiv Link</a></td>
+      <td>Research paper describing the TB-Bench framework</td>
+    </tr>
+    <tr>
+      <td>Benchmark Dataset</td>
+      <td><a href="https://huggingface.co/datasets/DHPR/TB-Bench-box">Hugging Face</a></td>
+      <td>Dataset for benchmarking models</td>
+    </tr>
+    <tr>
+      <td>Training Dataset (TB-100k)</td>
+      <td><a href="https://huggingface.co/datasets/DHPR/TB-Bench-box">Hugging Face</a></td>
+      <td>100k balanced samples for vision-language instruction tuning</td>
+    </tr>
+    <tr>
+      <td>Training Dataset (TB-250k)</td>
+      <td><a href="https://huggingface.co/datasets/DHPR/TB-Bench-box">Hugging Face</a></td>
+      <td>250k samples for vision-language instruction tuning</td>
+    </tr>
+    <tr>
+      <td>Code</td>
+      <td><a href="https://github.com/TB-AD/TB-Bench">GitHub Repository</a></td>
+      <td>Implementation code and examples</td>
+    </tr>
+  </table>
+  
+  <h2>Contact</h2>
+  <div class="contact-card">
+    <img src="img/lablogo_bw2.png" alt="Computer Vision Lab Logo">
+    <div class="contact-info">
+      <h3>Tohoku University Computer Vision Lab</h3>
+      <p><strong>Address:</strong> 6-6-01 Aramaki Aza-Aoba, Aoba-ku, Sendai, Miyagi 980-8579, Japan</p>
+      <p><strong>Phone:</strong> +81-22-795-7016</p>
+      <p><strong>Email:</strong> okatani@tohoku.ac.jp</p>
+      <p><a href="https://www.vision.is.tohoku.ac.jp/?page_id=145&lang=en" target="_blank">Visit Lab Website</a></p>
+    </div>
+  </div>
 </body>
 </html>
